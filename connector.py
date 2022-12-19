@@ -42,7 +42,8 @@ class Connector:
     def delete(self, query):
         """
         Удаление записей из файла, которые соответствуют запрос,
-        как в методе select
+        как в методе select. Если в query передан пустой словарь, то
+        функция удаления не сработает
         """
         pass
 
@@ -56,6 +57,6 @@ if __name__ == '__main__':
     data_from_file = df.select(dict())
     assert data_from_file == [data_for_file]
 
-    df.delete(dict())
+    df.delete({'id':1})
     data_from_file = df.select(dict())
     assert data_from_file == []
