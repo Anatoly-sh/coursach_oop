@@ -5,6 +5,10 @@ from typing import List
 from bs4 import BeautifulSoup
 from bs4.element import Tag
 
+from funcs_for_parsing_hh import *
+from funcs_for_parsing_sj import *
+import Vacancy
+
 
 class Engine(ABC):
     """
