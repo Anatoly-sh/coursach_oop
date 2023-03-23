@@ -124,6 +124,7 @@ class SJ(Engine):
                 response = self.get_request(url=self.url, headers=self.header, params=self.params).json()
                 pprint(response, stream=file)
 
+
 class Vacancy:
     __slots__ = ('source', 'name_vac', 'url', 'city', 'salary_from', 'description')
 
@@ -141,12 +142,33 @@ class Vacancy:
     def __lt__(self, other):
         return self.salary_from < other.salary_from
 
+    def __repr__(self):
+        return f'Источник: {self.source}, ' \
+               f'вакансия: {self.name_vac}, ' \
+               f'город: {self.city}, ' \
+               f'зарплата от: {self.salary_from}'
+
+
+
+
+# проверка Vacancy
+# data1 = {'source': 1, 'name_vac': 2, 'url': 3, 'city': 4, 'salary_from': 5, 'description': 6}
+# data2 = {'source': 1, 'name_vac': 2, 'url': 3, 'city': 4, 'salary_from': 55, 'description': 6}
+#
+# v1 = Vacancy(data1)
+# v2 = Vacancy(data2)
+#
+# print(v1.__slots__)
+# print(v1.__repr__)
+# print(v1.source)
+# print(v1.salary_from < v2.salary_from)
+
 
 # проверка записи в файл SJ
-sj = SJ('Python', '1')
+# sj = SJ('Python', '1')
 # pprint(h.params)    # +
 # pprint(h.get_request(h.url, h.params))    # +
-sj.write_data(sj.get_request(sj.url, sj.header, sj.params))    # +
+# sj.write_data(sj.get_request(sj.url, sj.header, sj.params))    # +
 
 
 # проверка записи в файл HH
