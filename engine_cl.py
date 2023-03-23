@@ -7,8 +7,8 @@ from bs4 import BeautifulSoup
 from bs4.element import Tag
 from pprint import pprint
 
-from funcs_for_parsing_hh import *
-from funcs_for_parsing_sj import *
+# from funcs_for_parsing_hh import *
+# from funcs_for_parsing_sj import *
 # import Vacancy
 from dotenv import load_dotenv
 
@@ -123,6 +123,23 @@ class SJ(Engine):
                 print(str(i), end=' ')
                 response = self.get_request(url=self.url, headers=self.header, params=self.params).json()
                 pprint(response, stream=file)
+
+class Vacancy:
+    __slots__ = ('source', 'name_vac', 'url', 'city', 'salary_from', 'description')
+
+    def __init__(self, data: dict):
+        self.source = data['source']
+        self.name_vac = data['name_vac']
+        self.url = data['url']
+        self.city = data['city']
+        self.salary_from = data['salary_from']
+        self.description = data['description']
+
+    def __gt__(self, other):
+        return self.salary_from > other.salary_from
+
+    def __lt__(self, other):
+        return self.salary_from < other.salary_from
 
 
 # проверка записи в файл SJ
