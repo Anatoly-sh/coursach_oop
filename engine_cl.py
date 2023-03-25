@@ -149,6 +149,19 @@ class Vacancy:
                f'зарплата от: {self.salary_from}'
 
 
+class Connector:
+    """
+    Класс проверяет состояния json файлов, готовит параметры для
+    формирования экземпляров класса Vacancy из скачанных вакансий
+    """
+    # пустой список для отсортированных вакансий (потом перенести в main)
+    SORTED_LIST = []
+    def __init__(self):
+        pass
+
+    def HH_search(self):
+        with open('./HH_vacancies.txt', 'r') as file:
+
 
 
 # проверка Vacancy
