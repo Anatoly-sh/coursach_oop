@@ -38,14 +38,14 @@ class Engine(ABC):
         except (requests.exceptions.RequestException, LookupError) as error:
             print(f'Не могу получить данные, {error}')
 
-    @abstractmethod # прверить необходимость
-    def write_data(self, data):
-        """
-        Абстрактный метод, записывающий полученные в запросе данные
-        в файл (имя???)
-        :param data: неотформатированные данные, полученные от сервиса
-        """
-        pass
+    # @abstractmethod # прверить необходимость
+    # def write_data(self, data):
+    #     """
+    #     Абстрактный метод, записывающий полученные в запросе данные
+    #     в файл (имя???)
+    #     :param data: неотформатированные данные, полученные от сервиса
+    #     """
+    #     pass
 
 
 class HH(Engine):
@@ -66,7 +66,7 @@ class HH(Engine):
         self.url = 'https://api.hh.ru/vacancies/'
         self.params = {
             'text': f'NAME:{self.search}',
-            'per_page': 10, # заменить на 100
+            'per_page': 100, # заменить на 100
             'page': 0,
             'area': '113'
         }
@@ -78,11 +78,11 @@ class HH(Engine):
         return super().get_request(self.url, self.params)     # строка запроса из класса Engine
 
     def request_and_write_data(self):
-        print('HH:__________________________________')
+        print('\nHH:__________________________________')
         with open('./HH_vacancies.json', 'w+') as file:
             # словарь с данными
             data_list = {}
-            for i in range(2):  # заменить на 5 или 10
+            for i in range(5):  # заменить на 5 или 10
                 self.params['page'] = i
                 print(str(i), end=' ')
                 data_of_page = self.get_request(self.url, self.params).json()
@@ -127,7 +127,7 @@ class SJ(Engine):
             print(f'Не могу получить данные, {error}')
 
     def request_and_write_data(self):
-        print('SJ:__________________________________')
+        print('\nSJ:__________________________________')
         with open('./SJ_vacancies.json', 'w+') as file:
             # словарь с данными
             data_list = {}
@@ -137,11 +137,11 @@ class SJ(Engine):
                 data_of_page = self.get_request(url=self.url, headers=self.header, params=self.params).json()
                 # добавляем данные в словарь
                 data_list[i + 1] = data_of_page
-            json.dump(data_list, file)
+            json.dump(data_list, file, ensure_ascii=False)
 
 
 class Vacancy:
-    __slots__ = ('source', 'name_vac', 'url', 'city', 'salary_from', 'description')
+    __slots__ = ('source', 'name_vac', 'url', 'city', 'salary_from', 'currency', 'description', 'responsibility')
 
     def __init__(self, data: dict):
         self.source = data['source']
@@ -149,7 +149,9 @@ class Vacancy:
         self.url = data['url']
         self.city = data['city']
         self.salary_from = data['salary_from']
+        self.currency = data['currency']
         self.description = data['description']
+        self.responsibility = data['responsibility']
 
     def __gt__(self, other):
         return self.salary_from > other.salary_from
@@ -162,20 +164,6 @@ class Vacancy:
                f'вакансия: {self.name_vac}, ' \
                f'город: {self.city}, ' \
                f'зарплата от: {self.salary_from}'
-
-
-class Connector:
-    """
-    Класс проверяет состояния json файлов, готовит параметры для
-    формирования экземпляров класса Vacancy из скачанных вакансий
-    """
-    # пустой список для отсортированных вакансий (потом перенести в main)
-    SORTED_LIST = []
-    def __init__(self):
-        pass
-
-    def HH_search(self):
-        with open('./HH_vacancies.json', 'r') as file:
 
 
 

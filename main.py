@@ -1,10 +1,13 @@
 import os
 import re
 from dotenv import load_dotenv
+from engine_cl import HH, SJ, Vacancy
 
 load_dotenv()
 search_str: str = os.getenv('search_str')
 set_experience = 0
+VACANCY_LIST = []
+UNSORTED_LIST = []
 
 menu_options = {
     1: 'Запросить/обновить данные с сайтов вакансий',
@@ -16,7 +19,7 @@ menu_options = {
 
 
 def print_menu():
-    print('                    Программа "Парсер вакансий"\n'
+    print('\n                    Программа "Парсер вакансий"\n'
           'выполняет поиск вакансий посредством API на сайтах HeadHunter и SuperJob')
     for key in menu_options.keys():
         print(key, '--', menu_options[key])
@@ -24,12 +27,18 @@ def print_menu():
 
 def load_data():
     print('Выбрана опция \'load_data\'')
-    print(f'По умолчанию поиск вакансий выполняется по ключевой фразе {search_str}')
+    print(f'По умолчанию поиск вакансий выполняется по ключевой фразе "{search_str}"')
     input_string = input('Введите фразу для поиска:')
     if len(input_string) > 2 and input_string.isalpha():
         new_search_str = input_string
     else:
         new_search_str = search_str
+    hh = HH(new_search_str, set_experience)
+    hh.request_and_write_data()
+    sj = SJ(new_search_str, set_experience)
+    sj.request_and_write_data()
+
+
 
 
 def show_town_list():
@@ -47,7 +56,6 @@ def show_top_10():
 
 if __name__ == '__main__':
     while True:
-        print(set_experience)
         print_menu()
         option = ''
         try:
