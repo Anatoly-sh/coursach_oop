@@ -4,12 +4,14 @@ from dotenv import load_dotenv
 
 load_dotenv()
 search_str: str = os.getenv('search_str')
+set_experience = 0
 
 menu_options = {
     1: 'Запросить/обновить данные с сайтов вакансий',
-    2: 'Посмотреть вакансии в указанном городе',
-    3: 'Вывести 10 самых высокооплачиваемых вакансий',
-    4: 'Завершение программы',
+    2: 'Установить флаг "без опыта работы"',
+    3: 'Посмотреть вакансии в указанном городе',
+    4: 'Вывести 10 самых высокооплачиваемых вакансий',
+    5: 'Завершение программы',
 }
 
 
@@ -39,13 +41,13 @@ def show_town_list():
         search_town = 'Москва'
 
 
-
 def show_top_10():
     print('Выбрана опция \'show_top_10\'')
 
 
 if __name__ == '__main__':
     while True:
+        print(set_experience)
         print_menu()
         option = ''
         try:
@@ -56,10 +58,13 @@ if __name__ == '__main__':
         if option == 1:
             load_data()
         elif option == 2:
-            show_town_list()
+            set_experience = 1
+            print(f'Флаг "без опыта работы" установлен')
         elif option == 3:
-            show_top_10()
+            show_town_list()
         elif option == 4:
+            show_top_10()
+        elif option == 5:
             print('Спасибо за использование программы')
             exit()
         else:
