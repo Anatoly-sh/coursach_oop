@@ -1,3 +1,10 @@
+import os
+import re
+from dotenv import load_dotenv
+
+load_dotenv()
+search_str: str = os.getenv('search_str')
+
 menu_options = {
     1: 'Запросить/обновить данные с сайтов вакансий',
     2: 'Посмотреть вакансии в указанном городе',
@@ -7,7 +14,7 @@ menu_options = {
 
 
 def print_menu():
-    print('                  Программа "Парсер вакансий"\n'
+    print('                    Программа "Парсер вакансий"\n'
           'выполняет поиск вакансий посредством API на сайтах HeadHunter и SuperJob')
     for key in menu_options.keys():
         print(key, '--', menu_options[key])
@@ -15,10 +22,22 @@ def print_menu():
 
 def load_data():
     print('Выбрана опция \'load_data\'')
+    print(f'По умолчанию поиск вакансий выполняется по ключевой фразе {search_str}')
+    input_string = input('Введите фразу для поиска:')
+    if len(input_string) > 2 and input_string.isalpha():
+        new_search_str = input_string
+    else:
+        new_search_str = search_str
 
 
 def show_town_list():
     print('Выбрана опция \'show_town_list\'')
+    input_string = input('Введите название города (по умолчанию - Москва:')
+    if len(input_string) > 2 and input_string.isalpha():
+        search_town = input_string
+    else:
+        search_town = 'Москва'
+
 
 
 def show_top_10():
