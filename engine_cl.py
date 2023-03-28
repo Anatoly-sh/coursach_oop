@@ -138,7 +138,7 @@ class Vacancy:
         self.responsibility = data['responsibility']
 
     def __str__(self):
-        return self.id + ': ' + self.name_vac
+        return f'{self.id}  :  {self.name_vac}'
 
     def __gt__(self, other):
         return self.salary_from > other.salary_from
@@ -151,34 +151,3 @@ class Vacancy:
                f'вакансия: {self.name_vac}, ' \
                f'город: {self.city}, ' \
                f'зарплата от: {self.salary_from}'
-
-
-
-# проверка Vacancy
-# data1 = {'source': 1, 'name_vac': 2, 'url': 3, 'city': 4, 'salary_from': 5, 'description': 6}
-# data2 = {'source': 1, 'name_vac': 2, 'url': 3, 'city': 4, 'salary_from': 55, 'description': 6}
-#
-# v1 = Vacancy(data1)
-# v2 = Vacancy(data2)
-#
-# print(v1.__slots__)
-# print(v1.__repr__)
-# print(v1.source)
-# print(v1.salary_from < v2.salary_from)
-
-
-# проверка записи в файл SJ
-# sj = SJ('Python', '1')
-# pprint(h.params)    # +
-# pprint(h.get_request(h.url, h.params))    # +
-# sj.write_data(sj.get_request(sj.url, sj.header, sj.params))    # +
-
-
-# проверка записи в файл HH
-# h = HH('Python', '1')
-# pprint(h.params)    # +
-# pprint(h.get_request(h.url, h.params))    # +
-# h.write_data(h.get_request(h.url, h.params))    # +
-
-
-

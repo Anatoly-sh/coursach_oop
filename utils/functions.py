@@ -25,7 +25,7 @@ def vacancy_selection_hh():
     """
     выполняет выборку данных из файла json HH и помещает в список вакансий
     """
-    with open('../HH_vacancies.json', 'r', encoding='utf-8') as file:
+    with open('./HH_vacancies.json', 'r', encoding='utf-8') as file:
         data = json.load(file)
         for page in data.values():
             # print(page)
@@ -59,7 +59,7 @@ def vacancy_selection_sj():
     """
     выполняет выборку данных из файла json SJ и помещает в список вакансий
     """
-    with open('../SJ_vacancies.json', 'r', encoding='utf-8') as file:
+    with open('./SJ_vacancies.json', 'r', encoding='utf-8') as file:
         data = json.load(file)
 
         # для каждой страницы (ключ - страница вакансий)
@@ -98,7 +98,7 @@ if __name__ == '__main__':
     # UNSORTED_VACANCY_LIST.sort()
     # SORTED_VACANCY_LIST = sorted(UNSORTED_VACANCY_LIST, key=lambda k: k.salary_from, reverse=True)
     # print(SORTED_VACANCY_LIST[:10])
-    print(len(unsorted_vacancy_list))
+    # print(len(unsorted_vacancy_list))
     # for item in UNSORTED_VACANCY_LIST:
     #     print(item.__str__)
-    pprint(unsorted_vacancy_list[0:10])
+
