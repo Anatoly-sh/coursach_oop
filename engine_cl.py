@@ -2,12 +2,6 @@ import json
 import os
 from abc import ABC, abstractmethod
 import requests
-from requests import Response
-from typing import List
-from pprint import pprint
-
-# from funcs_for_parsing_hh import *
-# from funcs_for_parsing_sj import *
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -38,15 +32,6 @@ class Engine(ABC):
         except (requests.exceptions.RequestException, LookupError) as error:
             print(f'Не могу получить данные, {error}')
 
-    # @abstractmethod # прверить необходимость
-    # def write_data(self, data):
-    #     """
-    #     Абстрактный метод, записывающий полученные в запросе данные
-    #     в файл (имя???)
-    #     :param data: неотформатированные данные, полученные от сервиса
-    #     """
-    #     pass
-
 
 class HH(Engine):
     """
@@ -66,16 +51,15 @@ class HH(Engine):
         self.url = 'https://api.hh.ru/vacancies/'
         self.params = {
             'text': f'NAME:{self.search}',
-            'per_page': 50,                         # на одной странице
+            'per_page': 50,                                 # на одной странице
             'page': 0,
             'area': '113'
         }
-
         if experience == '1':
-            self.params['experience'] = 'noExperience'  # добавляем в словарь параметров
+            self.params['experience'] = 'noExperience'      # добавляем в словарь параметров
 
     def get_request(self, url: str, params: dict):
-        return super().get_request(self.url, self.params)     # строка запроса из класса Engine
+        return super().get_request(self.url, self.params)   # строка запроса из класса Engine
 
     def request_and_write_data(self):
         print('\nHH:__________________________________')
@@ -153,6 +137,9 @@ class Vacancy:
         self.description = data['description']
         self.responsibility = data['responsibility']
 
+    def __str__(self):
+        return self.id + ': ' + self.name_vac
+
     def __gt__(self, other):
         return self.salary_from > other.salary_from
 
@@ -164,7 +151,6 @@ class Vacancy:
                f'вакансия: {self.name_vac}, ' \
                f'город: {self.city}, ' \
                f'зарплата от: {self.salary_from}'
-
 
 
 
