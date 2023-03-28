@@ -1,13 +1,13 @@
 import os
+from pprint import pprint
+
 from dotenv import load_dotenv
-from engine_cl import HH, SJ, Vacancy
+from engine_cl import HH, SJ
 from utils.functions import *
 
 load_dotenv()
 search_str: str = os.getenv('search_str')
 set_experience = 0
-VACANCY_LIST = []
-# UNSORTED_VACANCY_LIST = []
 
 menu_options = {
     1: 'Установить флаг "без опыта работы"',

@@ -2,6 +2,7 @@ import json
 import os
 from abc import ABC, abstractmethod
 import requests
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -37,13 +38,6 @@ class HH(Engine):
     """
     Класс, описывающий сервис поиска работы на HeadHunter.
     (в случае другого источника формируется аналогичный класс)
-    Args:
-        search (str): поисковый запрос (название вакансии формируется в меню main, по умолчанию - Python)
-        experience (str): параметр, отвечающий за поиск вакансий без требования опыта
-        (название вакансии формируется в меню main)
-    Attrs:
-        url (str): url API HeadHunter
-        params (dict): параметры API запроса
     """
 
     def __init__(self, search: str, experience: str):
@@ -51,17 +45,21 @@ class HH(Engine):
         self.url = 'https://api.hh.ru/vacancies/'
         self.params = {
             'text': f'NAME:{self.search}',
-            'per_page': 50,                                 # на одной странице
+            'per_page': 50,                         # на одной странице
             'page': 0,
             'area': '113'
         }
+
         if experience == '1':
-            self.params['experience'] = 'noExperience'      # добавляем в словарь параметров
+            self.params['experience'] = 'noExperience'  # добавляем в словарь параметров
 
     def get_request(self, url: str, params: dict):
-        return super().get_request(self.url, self.params)   # строка запроса из класса Engine
+        return super().get_request(self.url, self.params)     # строка запроса из класса Engine
 
     def request_and_write_data(self):
+        """
+        Запрашивает и загружает в файл данные в формате json
+        """
         print('\nHH:__________________________________')
         with open('./HH_vacancies.json', 'w+') as file:
             # словарь с данными
@@ -79,12 +77,6 @@ class SJ(Engine):
     """
     Класс, описывающий сервис поиска работы на HeadHunter.
     (в случае другого источника формируется аналогичный класс)
-    Args:
-        search (str): поисковый запрос (название вакансии формируется в меню main, по умолчанию - Python)
-        experience (str): параметр, отвечающий за поиск вакансий без требования опыта
-    Attrs:
-        url (str): url API SuperJob
-        params (dict): параметры API запроса
     """
     header = {"X-Api-App-Id": api_key}
 
@@ -111,6 +103,9 @@ class SJ(Engine):
             print(f'Не могу получить данные, {error}')
 
     def request_and_write_data(self):
+        """
+        Запрашивает и загружает в файл данные в формате json
+        """
         print('\nSJ:__________________________________')
         with open('./SJ_vacancies.json', 'w+') as file:
             # словарь с данными
@@ -125,6 +120,9 @@ class SJ(Engine):
 
 
 class Vacancy:
+    """
+    инициирует экземпляры класса с выбранными параметрами
+    """
     __slots__ = ('source', 'name_vac', 'id', 'city', 'salary_from', 'currency', 'description', 'responsibility')
 
     def __init__(self, data: dict):
@@ -136,9 +134,6 @@ class Vacancy:
         self.currency = data['currency']
         self.description = data['description']
         self.responsibility = data['responsibility']
-
-    def __str__(self):
-        return f'{self.id}  :  {self.name_vac}'
 
     def __gt__(self, other):
         return self.salary_from > other.salary_from
