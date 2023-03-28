@@ -2,12 +2,13 @@ import os
 import re
 from dotenv import load_dotenv
 from engine_cl import HH, SJ, Vacancy
+from utils.functions import *
 
 load_dotenv()
 search_str: str = os.getenv('search_str')
 set_experience = 0
 VACANCY_LIST = []
-UNSORTED_LIST = []
+UNSORTED_VACANCY_LIST = []
 
 menu_options = {
     1: 'Запросить/обновить данные с сайтов вакансий',
@@ -37,6 +38,7 @@ def load_data():
     hh.request_and_write_data()
     sj = SJ(new_search_str, set_experience)
     sj.request_and_write_data()
+    # vacancy_selection_SJ
 
 
 

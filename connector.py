@@ -60,3 +60,44 @@ if __name__ == '__main__':
     df.delete({'id':1})
     data_from_file = df.select(dict())
     assert data_from_file == []
+
+# ______________________________________________________________________________________________
+class Connector:
+    """
+    Класс проверяет состояния json файлов, готовит параметры для
+    формирования экземпляров класса Vacancy из скачанных вакансий
+    """
+    # пустой список для отсортированных вакансий (потом перенести в main)
+    UNSORTED_LIST = []
+    hh_dict = {'source': 'HeadHunter',
+               'name_vac': item['name'],                    # профессия
+               'url': item['alternate_url'],                # url
+               'city': item['area']['name'],                # город
+               'salary_from': item['salary']['from'],       # зарплата
+               'currency': item['salary']['currency'],      # RUR
+               }
+    if item['snippet']['requirement'] is not None:
+        hh_dict['description'] =  clean_text(pattern, item['snippet']['requirement'])
+    if item['snippet']['responsibility'] is not None:
+        hh_dict['responsibility'] = clean_text(pattern, item['snippet']['responsibility'])
+
+    sj_dict = {'source': 'SuperJob',
+               'name_vac': item['profession'],          # профессия
+               'url': item['client']['link'],           # url
+               'city': item['client']['town']['title'], # город
+               'salary_from': item['payment_from'],     # зарплата
+               'currency': item['currency'],            # RUR
+               }
+    if item['candidat'] is not None:
+        sj_dict['description'] = clean_text(pattern, item['candidat'])
+    if item['client']['description'] is not None:
+        sj_dict['responsibility'] = clean_text(pattern, item['client']['description'])
+
+    def __init__(self):
+        pass
+
+    def HH_search(self):
+        with open('./HH_vacancies.json', 'r') as file:
+
+
+

@@ -66,7 +66,7 @@ class HH(Engine):
         self.url = 'https://api.hh.ru/vacancies/'
         self.params = {
             'text': f'NAME:{self.search}',
-            'per_page': 100, # заменить на 100
+            'per_page': 50,                         # на одной странице
             'page': 0,
             'area': '113'
         }
@@ -82,13 +82,13 @@ class HH(Engine):
         with open('./HH_vacancies.json', 'w+') as file:
             # словарь с данными
             data_list = {}
-            for i in range(5):  # заменить на 5 или 10
+            for i in range(10):  # 10 страниц
                 self.params['page'] = i
                 print(str(i), end=' ')
                 data_of_page = self.get_request(self.url, self.params).json()
                 # добавляем данные в словарь
                 data_list[i + 1] = data_of_page
-            json.dump(data_list, file, ensure_ascii=False)
+            json.dump(data_list, file, indent=2, ensure_ascii=False)
 
 
 class SJ(Engine):
@@ -137,16 +137,16 @@ class SJ(Engine):
                 data_of_page = self.get_request(url=self.url, headers=self.header, params=self.params).json()
                 # добавляем данные в словарь
                 data_list[i + 1] = data_of_page
-            json.dump(data_list, file, ensure_ascii=False)
+            json.dump(data_list, file, indent=2, ensure_ascii=False)
 
 
 class Vacancy:
-    __slots__ = ('source', 'name_vac', 'url', 'city', 'salary_from', 'currency', 'description', 'responsibility')
+    __slots__ = ('source', 'name_vac', 'id', 'city', 'salary_from', 'currency', 'description', 'responsibility')
 
     def __init__(self, data: dict):
         self.source = data['source']
         self.name_vac = data['name_vac']
-        self.url = data['url']
+        self.id = data['id']
         self.city = data['city']
         self.salary_from = data['salary_from']
         self.currency = data['currency']
