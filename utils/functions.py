@@ -10,6 +10,13 @@ def clean_text(param, param1):
     return re.sub(param, "", param1)
 
 
+def sorted_list_vac(list_name):
+    """
+    с сортировкой не справился
+    """
+    list_name.sort(key=lambda k: k.salary_from, reverse=True)
+
+
 def vacancy_selection_hh():
     """
     выполняет выборку данных из файла json HH и помещает в список вакансий
@@ -34,10 +41,9 @@ def vacancy_selection_hh():
                 else:
                     hh_dict['salary_from'] = path_vacancy['salary'].get('from', 0)              # зарплата
                     hh_dict['currency'] = path_vacancy['salary'].get('currency', 0)             # валюта
-                # print(hh_dict['id'])
                 name_inst_vacancy_hh = f"HH_{hh_dict['id']}"
                 print(name_inst_vacancy_hh)
-                name_inst_vacancy = Vacancy(hh_dict)
+                name_inst_vacancy_hh = Vacancy(hh_dict)
                 unsorted_vacancy_list.append(name_inst_vacancy_hh)
 
 
@@ -53,8 +59,7 @@ def vacancy_selection_sj():
             # print(len(page['objects']))
             for i in range(len(page['objects'])):
                 path_vacancy = page['objects'][i]
-                # pprint(page['objects'][i]['client']['link'])
-                # pprint(page['objects'][i]['profession'])
+
                 # формирование словаря для экземпляров класса по вакансиям SJ
                 sj_dict = {'source': 'SuperJob',
                            'name_vac': path_vacancy.get('profession', 0),       # профессия
@@ -67,5 +72,5 @@ def vacancy_selection_sj():
                            }
                 name_inst_vacancy_sj = f"SJ_{sj_dict['id']}"
                 print(name_inst_vacancy_sj)
-                name_inst_vacancy = Vacancy(sj_dict)
+                name_inst_vacancy_sj = Vacancy(sj_dict)
                 unsorted_vacancy_list.append(name_inst_vacancy_sj)

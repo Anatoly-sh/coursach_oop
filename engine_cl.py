@@ -146,3 +146,6 @@ class Vacancy:
                f'вакансия: {self.name_vac}, ' \
                f'город: {self.city}, ' \
                f'зарплата от: {self.salary_from}'
+
+    def __str__(self):
+        return f'Вакансия - {self.name_vac}, зарплата - {self.salary_from}'

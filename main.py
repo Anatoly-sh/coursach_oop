@@ -49,6 +49,7 @@ def show_town_list():
         search_town = input_string
 
     for item in unsorted_vacancy_list:
+        # print(item.sity)
         if item.city == search_town:
             print(item)
 
