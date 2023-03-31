@@ -2,15 +2,18 @@ import os
 from pprint import pprint
 
 from dotenv import load_dotenv
-from engine_cl import HH, SJ
+from engine_cl import HH, SJ, Engine
 from utils.functions import *
-
+# from engine_cl import load_data_volume
 load_dotenv()
-search_str: str = os.getenv('search_str')
-set_experience = 0
+search_str: str = os.getenv('search_str')   # поисковая фраза по умолчанию
+set_experience = '0'                        # флаг "опыт работы"
+load_data_volume_default = 500                      # общее количество запрашиваемых вакансий с платформы по API по умолчанию
+per_page_default = 50                               # количество запрашиваемых вакансий на одной странице по умолчанию
+
 
 menu_options = {
-    1: 'Установить флаг "без опыта работы"',
+    1: 'Флаг "без опыта работы"',
     2: 'Запросить/обновить данные с сайтов вакансий в локальных файлах',
     3: 'Посмотреть вакансии в указанном городе',
     4: 'Вывести 10 самых высокооплачиваемых вакансий',
@@ -28,17 +31,30 @@ def print_menu():
 def load_data():
     print('Выбрана опция \'load_data\'')
     print(f'По умолчанию поиск вакансий выполняется по ключевой фразе "{search_str}"')
-    input_string = input('Введите фразу для поиска или "Enter":')
+    input_string = input('Введите фразу для поиска (с разделителями ; , / :)или "Enter":')
     if len(input_string) > 2 and input_string.isalpha():
-        new_search_str = input_string
+        new_search_str = re.split(";|,| |/|:", input_string)
     else:
         new_search_str = search_str
-    hh = HH(new_search_str, set_experience)
-    hh.request_and_write_data()
-    sj = SJ(new_search_str, set_experience)
+    inp = input('Введите требуемое количество вакансий с каждой платформы (сайта) - по умолчанию 500:')
+    if inp != "":
+        load_data_volume = int(inp)
+    else:
+        load_data_volume = load_data_volume_default
+    inp = input('Введите требуемое количество вакансий при запросе страницы - по умолчанию 50:')
+    if inp != "":
+        per_page = int(inp)
+    else:
+        per_page = per_page_default
+    print(load_data_volume)
+    print(per_page)
+
+    # hh = HH(new_search_str, set_experience, load_data_volume, per_page)
+    # hh.request_and_write_data()
+    sj = SJ(new_search_str, set_experience, load_data_volume, per_page)
     sj.request_and_write_data()
-    vacancy_selection_hh()
-    vacancy_selection_sj()
+    # vacancy_selection_hh()
+    # vacancy_selection_sj()
 
 
 def show_town_list():
@@ -68,12 +84,12 @@ if __name__ == '__main__':
         except:
             print('Неверный ввод. Пожалуйста введите цифру...')
         # Проверка выбора и действие
-        if option == 1:
-            if set_experience == 0:
-                set_experience = 1
+        if option == '1':
+            if set_experience == '0':
+                set_experience = '1'
                 print(f'Флаг "без опыта работы" установлен')
             else:
-                set_experience = 0
+                set_experience = '0'
                 print(f'Флаг "без опыта работы" сброшен')
         elif option == 2:
             load_data()

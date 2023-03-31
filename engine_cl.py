@@ -5,6 +5,8 @@ import requests
 
 from dotenv import load_dotenv
 
+# from main import load_data_volume, per_page
+# import main
 load_dotenv()
 
 api_key: str = os.getenv('SUPERJOB_API_KEY')
@@ -40,14 +42,15 @@ class HH(Engine):
     (в случае другого источника формируется аналогичный класс)
     """
 
-    def __init__(self, search: str, experience: str):
+    def __init__(self, search: str, experience: str, load_data_volume: int, per_page: int):
         self.search = search
+        self.load_data_volume = load_data_volume
         self.url = 'https://api.hh.ru/vacancies/'
         self.params = {
-            'text': f'NAME:{self.search}',
-            'per_page': 50,                         # на одной странице
-            'page': 0,
-            'area': '113'
+            'text': self.search,
+            'per_page': per_page,                           # на одной странице (50 по умолчанию)
+            # 'page': 0,                                      # далее в цикле переопределяется - можно убрать
+            'area': '113'                                   # Россия
         }
 
         if experience == '1':
@@ -64,7 +67,9 @@ class HH(Engine):
         with open('./HH_vacancies.json', 'w+') as file:
             # словарь с данными
             data_list = {}
-            for i in range(10):  # 10 страниц
+            # вычисляем количество загружаемых страниц (load_data_volume делим нацело на 'per_page'  +1)
+            # 'per_page' может быть подобрано в зависимости от возможностей платформы (по умолчанию - 50)
+            for i in range(int(self.load_data_volume // self.params['per_page'] + 1)):
                 self.params['page'] = i
                 print(str(i), end=' ')
                 data_of_page = self.get_request(self.url, self.params).json()
@@ -80,14 +85,15 @@ class SJ(Engine):
     """
     header = {"X-Api-App-Id": api_key}
 
-    def __init__(self, search: str, no_experience: str):
+    def __init__(self, search: str, no_experience: str, load_data_volume: int, per_page: int):
         self.search = search
+        self.load_data_volume = load_data_volume
         self.url = 'https://api.superjob.ru/2.0/vacancies/'
         self.params = {
             'keywords': self.search,
             'id_country': '1',
-            'count': 50,
-            'page': 1}
+            'count': per_page,
+            'page': 1}                              # не нужен?
         if no_experience == '1':
             self.params['without_experience'] = 1
 
@@ -110,7 +116,7 @@ class SJ(Engine):
         with open('./SJ_vacancies.json', 'w+') as file:
             # словарь с данными
             data_list = {}
-            for i in range(10):
+            for i in range(int(self.load_data_volume // self.params['count'] + 1)):         #int(self.load_data_volume // self.params['count'] + 1)
                 self.params['page'] = i
                 print(str(i), end=' ')
                 data_of_page = self.get_request(url=self.url, headers=self.header, params=self.params).json()
