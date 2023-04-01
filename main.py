@@ -3,6 +3,7 @@ from pprint import pprint
 
 from dotenv import load_dotenv
 from engine_cl import HH, SJ, Engine
+from connector import Connector
 from utils.functions import *
 # from engine_cl import load_data_volume
 load_dotenv()
@@ -74,8 +75,12 @@ def show_town_list():
 def show_top_10():
     print('Выбрана опция \'show_top_10\'')
     unsorted_vacancy_list = []
-    vacancy_selection_hh(unsorted_vacancy_list)
-    vacancy_selection_sj(unsorted_vacancy_list)
+    conn = Connector()
+    conn.vacancy_selection_hh(unsorted_vacancy_list)
+    conn.vacancy_selection_sj(unsorted_vacancy_list)
+
+    # vacancy_selection_hh(unsorted_vacancy_list)
+    # vacancy_selection_sj(unsorted_vacancy_list)
 
     unsorted_vacancy_list.sort(key=lambda k: k.salary_from, reverse=True)
     # print(unsorted_vacancy_list[:10])   # REPR

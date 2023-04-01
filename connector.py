@@ -1,4 +1,74 @@
+import json
+# from jsonschema import validate
+
+from engine_cl import Vacancy
+
+
 class Connector:
+    @staticmethod
+    def vacancy_selection_hh(unsorted_vacancy_list: list):
+        """
+        выполняет выборку данных из файла json HH и помещает в список вакансий
+        """
+        with open('./HH_vacancies.json', 'r', encoding='utf-8') as file:
+            data = json.load(file)
+            for page in data.values():
+                for i in range(len(page['items'])):
+                    path_vacancy = page['items'][i]
+                    # формирование словаря для экземпляров класса по вакансиям HH
+                    hh_dict = {'source': 'HeadHunter',
+                               'name_vac': path_vacancy['name'],  # профессия
+                               'id': path_vacancy['id'],  # номер id
+                               'city': path_vacancy['area']['name'],  # город
+                               'description': path_vacancy['snippet'].get('requirement', 0),
+                               'responsibility': path_vacancy['snippet'].get('responsibility', 0)
+                               }
+                    # если параметров нет в json или параметр - None:
+                    if path_vacancy.get('salary') is None:
+                        hh_dict['salary_from'] = 0
+                        hh_dict['currency'] = 0
+                    elif path_vacancy['salary'].get('from') is None:
+                        hh_dict['salary_from'] = 0
+                        hh_dict['currency'] = 0
+                    else:
+                        hh_dict['salary_from'] = path_vacancy['salary'].get('from', 0)  # зарплата
+                        hh_dict['currency'] = path_vacancy['salary'].get('currency', 0)  # валюта
+                    # name_inst_vacancy_hh = f"HH_{hh_dict['id']}"
+                    # # print(name_inst_vacancy_hh)
+                    # name_inst_vacancy_hh = Vacancy(hh_dict)
+                    unsorted_vacancy_list.append(Vacancy(hh_dict))
+
+    @staticmethod
+    def vacancy_selection_sj(unsorted_vacancy_list: list):
+        """
+        выполняет выборку данных из файла json SJ и помещает в список вакансий
+        """
+        with open('./SJ_vacancies.json', 'r', encoding='utf-8') as file:
+            data = json.load(file)
+
+            # для каждой страницы (ключ - страница вакансий)
+            for page in data.values():
+                # print(len(page['objects']))
+                for i in range(len(page['objects'])):
+                    path_vacancy = page['objects'][i]
+
+                    # формирование словаря для экземпляров класса по вакансиям SJ
+                    sj_dict = {'source': 'SuperJob',
+                               'name_vac': path_vacancy.get('profession', 0),  # профессия
+                               'id': path_vacancy['id'],  # номер id
+                               'city': path_vacancy['town'].get('title', 0),  # город
+                               'salary_from': path_vacancy['payment_from'],  # зарплата
+                               'currency': path_vacancy['currency'],  # валюта
+                               'description': path_vacancy['candidat'],
+                               'responsibility': path_vacancy['client'].get('description', 0)
+                               }
+                    # name_inst_vacancy_sj = f"SJ_{sj_dict['id']}"
+                    # # print(name_inst_vacancy_sj)
+                    # name_inst_vacancy_sj = Vacancy(sj_dict)
+                    unsorted_vacancy_list.append(Vacancy(sj_dict))
+
+
+
     """
     Класс коннектор к файлу, обязательно файл должен быть в json формате
     не забывать проверять целостность данных, что файл с данными не подвергся
@@ -21,7 +91,7 @@ class Connector:
         Также проверить на деградацию и возбудить исключение
         если файл потерял актуальность в структуре данных
         """
-        pass
+
 
     def insert(self, data):
         """
@@ -60,42 +130,3 @@ if __name__ == '__main__':
     df.delete({'id':1})
     data_from_file = df.select(dict())
     assert data_from_file == []
-
-# ______________________________________________________________________________________________
-class Connector:
-    """
-    Класс проверяет состояния json файлов, готовит параметры для
-    формирования экземпляров класса Vacancy из скачанных вакансий
-    """
-    # пустой список для отсортированных вакансий (потом перенести в main)
-    UNSORTED_LIST = []
-    hh_dict = {'source': 'HeadHunter',
-               'name_vac': item['name'],                    # профессия
-               'url': item['alternate_url'],                # url
-               'city': item['area']['name'],                # город
-               'salary_from': item['salary']['from'],       # зарплата
-               'currency': item['salary']['currency'],      # RUR
-               }
-    if item['snippet']['requirement'] is not None:
-        hh_dict['description'] =  clean_text(pattern, item['snippet']['requirement'])
-    if item['snippet']['responsibility'] is not None:
-        hh_dict['responsibility'] = clean_text(pattern, item['snippet']['responsibility'])
-
-    sj_dict = {'source': 'SuperJob',
-               'name_vac': item['profession'],          # профессия
-               'url': item['client']['link'],           # url
-               'city': item['client']['town']['title'], # город
-               'salary_from': item['payment_from'],     # зарплата
-               'currency': item['currency'],            # RUR
-               }
-    if item['candidat'] is not None:
-        sj_dict['description'] = clean_text(pattern, item['candidat'])
-    if item['client']['description'] is not None:
-        sj_dict['responsibility'] = clean_text(pattern, item['client']['description'])
-
-    def __init__(self):
-        pass
-
-    def HH_search(self):
-        with open('./HH_vacancies.json', 'r') as file:
-        pass
