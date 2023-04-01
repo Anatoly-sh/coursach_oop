@@ -78,7 +78,9 @@ def show_top_10():
     vacancy_selection_sj(unsorted_vacancy_list)
 
     unsorted_vacancy_list.sort(key=lambda k: k.salary_from, reverse=True)
-    pprint(unsorted_vacancy_list)
+    # print(unsorted_vacancy_list[:10])   # REPR
+    for item in range(10):
+        print(unsorted_vacancy_list[item])
 
 
 if __name__ == '__main__':
