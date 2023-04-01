@@ -142,9 +142,17 @@ class Vacancy:
         self.responsibility = data['responsibility']
 
     def __gt__(self, other):
+        # if self.salary_from is None:
+        #     self.salary_from = 0
+        # if other.salary_from is None:
+        #     other.salary_from = 0
         return self.salary_from > other.salary_from
 
     def __lt__(self, other):
+        # if self.salary_from is None:
+        #     self.salary_from = 0
+        # if other.salary_from is None:
+        #     other.salary_from = 0
         return self.salary_from < other.salary_from
 
     def __repr__(self):

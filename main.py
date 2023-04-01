@@ -10,7 +10,7 @@ search_str: str = os.getenv('search_str')   # поисковая фраза по
 set_experience = '0'                        # флаг "опыт работы"
 load_data_volume_default = 500                      # общее количество запрашиваемых вакансий с платформы по API по умолчанию
 per_page_default = 50                               # количество запрашиваемых вакансий на одной странице по умолчанию
-
+# unsorted_vacancy_list = []
 
 menu_options = {
     1: 'Флаг "без опыта работы"',
@@ -41,7 +41,7 @@ def load_data():
         load_data_volume = int(inp)
     else:
         load_data_volume = load_data_volume_default
-    inp = input('Введите требуемое количество вакансий при запросе страницы - по умолчанию 50:')
+    inp = input('Введите требуемое количество вакансий на странице - по умолчанию 50:')
     if inp != "":
         per_page = int(inp)
     else:
@@ -49,16 +49,17 @@ def load_data():
     print(load_data_volume)
     print(per_page)
 
-    # hh = HH(new_search_str, set_experience, load_data_volume, per_page)
-    # hh.request_and_write_data()
+    # формирование экз. класса HH, затем - SJ
+    hh = HH(new_search_str, set_experience, load_data_volume, per_page)
+    # вызов метода загрузки данных с сайта, параметры: поисковая строка/опыт/объем данных/количество на странице ответа
+    hh.request_and_write_data()
     sj = SJ(new_search_str, set_experience, load_data_volume, per_page)
     sj.request_and_write_data()
-    # vacancy_selection_hh()
-    # vacancy_selection_sj()
 
 
 def show_town_list():
     print('Выбрана опция \'show_town_list\'')
+    unsorted_vacancy_list = []
     input_string = input('Введите название города (по умолчанию - Москва:')
     search_town = 'Москва'
     if len(input_string) > 2 and input_string.isalpha():
@@ -72,7 +73,12 @@ def show_town_list():
 
 def show_top_10():
     print('Выбрана опция \'show_top_10\'')
-    pprint(unsorted_vacancy_list[0:10])
+    unsorted_vacancy_list = []
+    vacancy_selection_hh(unsorted_vacancy_list)
+    vacancy_selection_sj(unsorted_vacancy_list)
+
+    unsorted_vacancy_list.sort(key=lambda k: k.salary_from, reverse=True)
+    pprint(unsorted_vacancy_list)
 
 
 if __name__ == '__main__':

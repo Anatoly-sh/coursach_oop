@@ -98,6 +98,4 @@ class Connector:
 
     def HH_search(self):
         with open('./HH_vacancies.json', 'r') as file:
-
-
-
+        pass

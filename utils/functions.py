@@ -3,7 +3,7 @@ import re
 from engine_cl import Vacancy
 
 pattern = '<[^<]+?>'
-unsorted_vacancy_list = []
+# unsorted_vacancy_list = []
 
 
 def clean_text(param, param1):
@@ -14,10 +14,10 @@ def sorted_list_vac(list_name):
     """
     с сортировкой не справился
     """
-    list_name.sort(key=lambda k: k.salary_from, reverse=True)
+    return list_name.sort(key=lambda k: k.salary_from, reverse=True)
 
 
-def vacancy_selection_hh():
+def vacancy_selection_hh(unsorted_vacancy_list):
     """
     выполняет выборку данных из файла json HH и помещает в список вакансий
     """
@@ -34,20 +34,23 @@ def vacancy_selection_hh():
                            'description': path_vacancy['snippet'].get('requirement', 0),
                            'responsibility': path_vacancy['snippet'].get('responsibility', 0)
                            }
-                # если параметров нет в json:
-                if path_vacancy.get('salary', 0) is None:
+                # если параметров нет в json или параметр - None:
+                if path_vacancy.get('salary') is None:
+                    hh_dict['salary_from'] = 0
+                    hh_dict['currency'] = 0
+                elif path_vacancy['salary'].get('from') is None:
                     hh_dict['salary_from'] = 0
                     hh_dict['currency'] = 0
                 else:
                     hh_dict['salary_from'] = path_vacancy['salary'].get('from', 0)              # зарплата
                     hh_dict['currency'] = path_vacancy['salary'].get('currency', 0)             # валюта
                 name_inst_vacancy_hh = f"HH_{hh_dict['id']}"
-                print(name_inst_vacancy_hh)
+                # print(name_inst_vacancy_hh)
                 name_inst_vacancy_hh = Vacancy(hh_dict)
                 unsorted_vacancy_list.append(name_inst_vacancy_hh)
 
 
-def vacancy_selection_sj():
+def vacancy_selection_sj(unsorted_vacancy_list):
     """
     выполняет выборку данных из файла json SJ и помещает в список вакансий
     """
@@ -71,6 +74,6 @@ def vacancy_selection_sj():
                            'responsibility': path_vacancy['client'].get('description', 0)
                            }
                 name_inst_vacancy_sj = f"SJ_{sj_dict['id']}"
-                print(name_inst_vacancy_sj)
+                # print(name_inst_vacancy_sj)
                 name_inst_vacancy_sj = Vacancy(sj_dict)
                 unsorted_vacancy_list.append(name_inst_vacancy_sj)
