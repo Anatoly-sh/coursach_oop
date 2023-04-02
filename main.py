@@ -1,13 +1,11 @@
 import os
-from pprint import pprint
 
 from dotenv import load_dotenv
-from engine_cl import HH, SJ, Engine
+from engine_cl import HH, SJ
 from connector import Connector
 
 from utils.functions import *
 
-# from engine_cl import load_data_volume
 load_dotenv()
 search_str: str = os.getenv('search_str')  # поисковая фраза по умолчанию
 set_experience = '0'  # флаг "опыт работы"
@@ -15,13 +13,14 @@ load_data_volume_default = 500  # общее количество запраши
 per_page_default = 50  # количество запрашиваемых вакансий на одной странице по умолчанию
 unsorted_vacancy_list = []
 unsorted_vacancy_list_dict = []
+# vacancy_write_file = []
 
 menu_options = {
     1: 'Флаг "без опыта работы"',
     2: 'Запросить/обновить данные с сайтов вакансий в локальных файлах',
     3: 'Посмотреть вакансии в указанном городе',
     4: 'Вывести 10 самых высокооплачиваемых вакансий',
-    5: 'Операции с файлом json',
+    5: 'Запись обрабатываемых вакансий в файл json',
     6: 'Завершение программы',
 }
 
@@ -68,14 +67,11 @@ def show_town_list():
     input_string = input('Введите название города (по умолчанию - Москва):')
     if len(input_string) > 2 and input_string.isalpha():
         search_town = input_string
-    # if len(unsorted_vacancy_list) == 0:
     unsorted_vacancy_list.clear()
     unsorted_vacancy_list_dict.clear()
-    conn = Connector()
+    conn = Connector('tmp.json')
     conn.vacancy_selection_hh(unsorted_vacancy_list, unsorted_vacancy_list_dict)
     conn.vacancy_selection_sj(unsorted_vacancy_list, unsorted_vacancy_list_dict)
-    print(len(unsorted_vacancy_list))
-    print(len(unsorted_vacancy_list))
     print(f'Поиск по городу: {search_town}:')
     for item in unsorted_vacancy_list:
         if item.city == search_town:
@@ -85,57 +81,26 @@ def show_town_list():
 def show_top_10():
     print('Выбрана опция \'show_top_10\'')
     if len(unsorted_vacancy_list) == 0:
-        conn = Connector()
+        conn = Connector('tmp.json')
         conn.vacancy_selection_hh(unsorted_vacancy_list)
         conn.vacancy_selection_sj(unsorted_vacancy_list)
 
-    # vacancy_selection_hh(unsorted_vacancy_list)
-    # vacancy_selection_sj(unsorted_vacancy_list)
-
     unsorted_vacancy_list.sort(key=lambda k: k.salary_from, reverse=True)
-    # print(unsorted_vacancy_list[:10])   # REPR
+    sorted_by_salary_list = unsorted_vacancy_list
     for item in range(10):
-        print(unsorted_vacancy_list[item])
+        print(sorted_by_salary_list[item])      # сортированный по зарплате
 
 
-def file_i_o():
-    print('\nВозможны следующие операции файлами:\n'
-          '1 -- Сохранение текущего списка вакансий в файл json\n'
-          '2 -- Добавление вакансии в файл json\n'
-          '3 -- Удаление вакансий без указания зарплаты из файла json \n'
-          '4 -- Сохранение текущего списка вакансий в файл csv')
-    while True:
-        input_cmd = input('Введите команду (1 - 4): ')
-        try:
-            input_cmd = int(input_cmd)
-        except ValueError:
-            print('Правильный номер, пожалуйста')
-            continue
-        if 1 <= input_cmd <= 4:
-            break
-        else:
-            print('От 1 до 4, пожалуйста')
-
-    conn = Connector()  # мб Connector.wr_json_file(jf)??????????????????????
-    if input_cmd == 1:
-        # print(len(unsorted_vacancy_list_dict))
-        # for item in range(len(unsorted_vacancy_list_dict)):
-        #     pprint(unsorted_vacancy_list_dict[item])
-        jf = input('Введите имя файла: ')
-        conn.wr_json_file(jf, unsorted_vacancy_list_dict)
-
-    if input_cmd == 2:
-        tst_vacancy = {'id': 1, 'title': 'tet'}
-        conn.insert(tst_vacancy)
-
-    if input_cmd == 3:
-        conn.select(dict())
-
-    if input_cmd == 4:
-        conn.delete({'id': 1})
+def write_current_json_file():
+    conn = Connector('jhg')
+    conn.vacancy_selection_hh(unsorted_vacancy_list, unsorted_vacancy_list_dict)
+    conn.vacancy_selection_sj(unsorted_vacancy_list, unsorted_vacancy_list_dict)
+    jf = input('Введите имя файла: ')
+    conn.wr_json_file(jf, unsorted_vacancy_list_dict)
 
 
 if __name__ == '__main__':
+
     while True:
         print_menu()
         option = ''
@@ -158,7 +123,7 @@ if __name__ == '__main__':
         elif option == 4:
             show_top_10()
         elif option == 5:
-            file_i_o()
+            write_current_json_file()
         elif option == 6:
             print('Спасибо за использование программы')
             exit()

@@ -1,14 +1,9 @@
 import json
-from pprint import pprint
-
-# from jsonschema import validate
 
 from engine_cl import Vacancy
 from utils.functions import clean_text
 
 pattern = '<[^<]+?>'            # pattern для очистки текста от тегов
-# unsorted_vacancy_list = []
-# unsorted_vacancy_list_dict = []
 
 
 class Connector:
@@ -32,7 +27,6 @@ class Connector:
                                'city': path_vacancy['area']['name'],  # город
                                }
                     # если параметров нет в json или параметр None - избавляемся:
-                    # 'description': clean_text(pattern, path_vacancy['snippet'].get('requirement', 0))
                     if path_vacancy['snippet'].get('requirement', 0) is not None:
                         hh_dict['description'] = \
                             clean_text(pattern, path_vacancy['snippet'].get('requirement', 0))
@@ -82,22 +76,15 @@ class Connector:
                                'description': path_vacancy['candidat'],
                                'responsibility': path_vacancy['client'].get('description', 0)
                                }
-                    # обрезка длинных строк
-                    # if len(sj_dict['responsibility']) > 200:
-                    #     var = sj_dict['responsibility']
-                    #     sj_dict['responsibility'] = var[:200] + '..'
 
-                    # name_inst_vacancy_sj = f"SJ_{sj_dict['id']}"
-                    # # print(name_inst_vacancy_sj)
-                    # name_inst_vacancy_sj = Vacancy(sj_dict)
                     unsorted_vacancy_list.append(Vacancy(sj_dict))
                     unsorted_vacancy_list_dict.append(sj_dict)          # для формирования json-файла
 
     @staticmethod
     # connect
-    def wr_json_file(file, vacancy_list):
+    def wr_json_file(file, vacancy_write_file):
         with open(file, 'w+') as json_file:
-            json.dump(vacancy_list, json_file, indent=2, ensure_ascii=False)
+            json.dump(vacancy_write_file, json_file, indent=2, ensure_ascii=False)
 
     def connect(self):
         """
@@ -149,7 +136,6 @@ class Connector:
 
         with open(self.data_file, 'w') as file:
             json.dump(result, file, indent=2, ensure_ascii=False)
-
 
 
 if __name__ == '__main__':
