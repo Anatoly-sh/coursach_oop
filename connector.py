@@ -99,13 +99,20 @@ class Connector:
         with open(file, 'w+') as json_file:
             json.dump(vacancy_list, json_file, indent=2, ensure_ascii=False)
 
+    def connect(self):
+        """
+               Создание файла с пустым списком или его перезапись
+        """
+        with open(self.data_file, 'w') as file:
+            json.dump([], file)
+
     def insert(self, data: dict) -> None:
         """Добавление данных в файл"""
         with open(self.data_file, 'r', encoding='UTF-8') as file:
             data_json = json.load(file)
             data_json.append(data)
-            with open(self.data_file, 'w', encoding='UTF-8') as file:
-                json.dump(data_json, file, indent=2, ensure_ascii=False)
+        with open(self.data_file, 'w', encoding='UTF-8') as file:
+            json.dump(data_json, file, indent=2, ensure_ascii=False)
 
     def select(self, query: dict) -> list:
         """
@@ -146,16 +153,16 @@ class Connector:
 
 
 if __name__ == '__main__':
-    df = Connector('tmp1.json')
-
+    df = Connector('tmp.json')
+    # df.connect()
     data_for_file = {'id': 1, 'title': 'tet'}
-
+    #
     df.insert(data_for_file)
-    # data_from_file = df.select(dict())
-    # data_from_file = df.select(data_for_file)
-    # print(data_from_file)
-    # assert data_from_file == [data_for_file]
-    # #
-    # df.delete({'id': 1})
-    # data_from_file = df.select(dict())
-    # assert data_from_file == []
+    data_from_file = df.select(dict())
+    data_from_file = df.select(data_for_file)
+    print(data_from_file)
+    assert data_from_file == [data_for_file]
+
+    df.delete({'id': 1})
+    data_from_file = df.select(dict())
+    assert data_from_file == []
