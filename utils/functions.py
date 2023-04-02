@@ -12,7 +12,7 @@ def clean_text(param, param1):
 
 def sorted_list_vac(list_name):
     """
-    с сортировкой не справился
+    сортирует по ключу список вакансий типа Vacancy
     """
     return list_name.sort(key=lambda k: k.salary_from, reverse=True)
 

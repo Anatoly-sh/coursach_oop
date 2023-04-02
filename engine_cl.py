@@ -49,22 +49,21 @@ class HH(Engine):
         self.params = {
             'text': self.search,
             'per_page': per_page,                           # на одной странице (50 по умолчанию)
-            # 'page': 0,                                      # далее в цикле переопределяется - можно убрать
             'area': '113'                                   # Россия
         }
 
         if experience == '1':
-            self.params['experience'] = 'noExperience'  # добавляем в словарь параметров
+            self.params['experience'] = 'noExperience'      # добавляем в словарь параметров
 
     def get_request(self, url: str, params: dict):
-        return super().get_request(self.url, self.params)     # строка запроса из класса Engine
+        return super().get_request(self.url, self.params)   # строка запроса из класса Engine
 
     def request_and_write_data(self):
         """
         Запрашивает и загружает в файл данные в формате json
         """
         print('\nHH:__________________________________')
-        with open('./HH_vacancies.json', 'w+') as file:
+        with open('./HH_vacancies.json', 'w') as file:
             # словарь с данными
             data_list = {}
             # вычисляем количество загружаемых страниц (load_data_volume делим нацело на 'per_page'  +1)
@@ -90,14 +89,15 @@ class SJ(Engine):
         self.load_data_volume = load_data_volume
         self.url = 'https://api.superjob.ru/2.0/vacancies/'
         self.params = {
-            'keywords': self.search,
+            'keyword': self.search,
             'id_country': '1',
             'count': per_page,
             'page': 1}                              # не нужен?
         if no_experience == '1':
             self.params['without_experience'] = 1
 
-    def get_request(self, url: str, headers: str, params: dict):
+    def get_request(self, url: str, headers: dict, params: dict):
+        # отличается от базового метода
         try:
             response = requests.get(url=self.url, headers=self.header, params=self.params)
             if response.status_code != 200:
@@ -113,10 +113,10 @@ class SJ(Engine):
         Запрашивает и загружает в файл данные в формате json
         """
         print('\nSJ:__________________________________')
-        with open('./SJ_vacancies.json', 'w+') as file:
+        with open('./SJ_vacancies.json', 'w') as file:
             # словарь с данными
             data_list = {}
-            for i in range(int(self.load_data_volume // self.params['count'] + 1)):         #int(self.load_data_volume // self.params['count'] + 1)
+            for i in range(int(self.load_data_volume // self.params['count'] + 1)):
                 self.params['page'] = i
                 print(str(i), end=' ')
                 data_of_page = self.get_request(url=self.url, headers=self.header, params=self.params).json()
@@ -142,17 +142,9 @@ class Vacancy:
         self.responsibility = data['responsibility']
 
     def __gt__(self, other):
-        # if self.salary_from is None:
-        #     self.salary_from = 0
-        # if other.salary_from is None:
-        #     other.salary_from = 0
         return self.salary_from > other.salary_from
 
     def __lt__(self, other):
-        # if self.salary_from is None:
-        #     self.salary_from = 0
-        # if other.salary_from is None:
-        #     other.salary_from = 0
         return self.salary_from < other.salary_from
 
     def __repr__(self):
