@@ -139,4 +139,6 @@ dmypy.json
 cython_debug/
 connector.py
 jobs_classes.py
+*.json
+
 

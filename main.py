@@ -65,8 +65,15 @@ def show_town_list():
     print('Выбрана опция \'show_town_list\'')
     search_town = 'Москва'
     input_string = input('Введите название города (по умолчанию - Москва):')
-    if len(input_string) > 2 and input_string.isalpha():
-        search_town = input_string
+    if len(input_string) > 2:
+        search_town = input_string.title()
+        if '-' in search_town:
+            search_town = search_town.split('-')
+            for item in search_town:
+                item.title()
+            search_town = '-'.join(search_town)
+        search_town = search_town.title()
+
     unsorted_vacancy_list.clear()
     unsorted_vacancy_list_dict.clear()
     conn = Connector('tmp.json')
@@ -81,9 +88,10 @@ def show_town_list():
 def show_top_10():
     print('Выбрана опция \'show_top_10\'')
     if len(unsorted_vacancy_list) == 0:
+        print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
         conn = Connector('tmp.json')
-        conn.vacancy_selection_hh(unsorted_vacancy_list)
-        conn.vacancy_selection_sj(unsorted_vacancy_list)
+        conn.vacancy_selection_hh(unsorted_vacancy_list, unsorted_vacancy_list_dict)
+        conn.vacancy_selection_sj(unsorted_vacancy_list, unsorted_vacancy_list_dict)
 
     unsorted_vacancy_list.sort(key=lambda k: k.salary_from, reverse=True)
     sorted_by_salary_list = unsorted_vacancy_list

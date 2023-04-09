@@ -127,7 +127,7 @@ class SJ(Engine):
 
 class Vacancy:
     """
-    инициирует экземпляры класса с выбранными параметрами
+    Инициирует экземпляры класса с выбранными параметрами
     """
     __slots__ = ('source', 'name_vac', 'id', 'city', 'salary_from', 'currency', 'description', 'responsibility')
 

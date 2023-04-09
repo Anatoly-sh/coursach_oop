@@ -13,7 +13,7 @@ class Connector:
     @staticmethod
     def vacancy_selection_hh(unsorted_vacancy_list: list, unsorted_vacancy_list_dict: list):
         """
-        выполняет выборку данных из файла json HH и помещает в список вакансий
+        Выполняет выборку данных из файла json HH и помещает в список вакансий
         """
         with open('./HH_vacancies.json', 'r', encoding='utf-8') as file:
             data = json.load(file)
@@ -55,7 +55,7 @@ class Connector:
     @staticmethod
     def vacancy_selection_sj(unsorted_vacancy_list: list, unsorted_vacancy_list_dict: list):
         """
-        выполняет выборку данных из файла json SJ и помещает в список вакансий
+        Выполняет выборку данных из файла json SJ и помещает в список вакансий
         """
         with open('./SJ_vacancies.json', 'r', encoding='utf-8') as file:
             data = json.load(file)
@@ -88,7 +88,7 @@ class Connector:
 
     def connect(self):
         """
-               Создание файла с пустым списком или его перезапись
+        Создание файла с пустым списком или его перезапись
         """
         with open(self.data_file, 'w') as file:
             json.dump([], file)
