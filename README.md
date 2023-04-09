@@ -7,7 +7,7 @@ engine_cl - файл классов:
     class Engine(ABC) - родительский 
     сlass HH(Engine) и class SJ(Engine) - для работы с сайтами
     class Vacancy - класс, описывающий вакансии
-    Connect - 
+    class Connector - класс для взаимодействия с файлами
 utils - директория функций: functions.py - функции для работы программы
 
 requirements.txt - список необходимых пакетов для работы с программой
