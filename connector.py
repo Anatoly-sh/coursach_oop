@@ -11,7 +11,9 @@ class Connector:
         self.data_file = file_path
 
     @staticmethod
-    def vacancy_selection_hh(unsorted_vacancy_list: list, unsorted_vacancy_list_dict: list):
+    def vacancy_selection_hh():    # (unsorted_vacancy_list: list, unsorted_vacancy_list_dict: list):
+        unsorted_vacancy_list_hh = []
+        unsorted_vacancy_list_dict_hh = []
         """
         Выполняет выборку данных из файла json HH и помещает в список вакансий
         """
@@ -49,11 +51,14 @@ class Connector:
                         hh_dict['salary_from'] = path_vacancy['salary'].get('from', 0)  # зарплата
                         hh_dict['currency'] = path_vacancy['salary'].get('currency', 0)  # валюта
 
-                    unsorted_vacancy_list.append(Vacancy(hh_dict))          # анализируемый список (10 лучших + города)
-                    unsorted_vacancy_list_dict.append(hh_dict)              # для формирования json-файла
+                    unsorted_vacancy_list_hh.append(Vacancy(hh_dict))  # Список экз. вакансий для (10 лучших + города)
+                    unsorted_vacancy_list_dict_hh.append(hh_dict)      # Список словарей вакансий для фор-я json-файла
+        return unsorted_vacancy_list_hh, unsorted_vacancy_list_dict_hh      # возвращаем кортеж
 
     @staticmethod
-    def vacancy_selection_sj(unsorted_vacancy_list: list, unsorted_vacancy_list_dict: list):
+    def vacancy_selection_sj():     # (unsorted_vacancy_list: list, unsorted_vacancy_list_dict: list):
+        unsorted_vacancy_list_sj = []
+        unsorted_vacancy_list_dict_sj = []
         """
         Выполняет выборку данных из файла json SJ и помещает в список вакансий
         """
@@ -77,8 +82,9 @@ class Connector:
                                'responsibility': path_vacancy['client'].get('description', 0)
                                }
 
-                    unsorted_vacancy_list.append(Vacancy(sj_dict))
-                    unsorted_vacancy_list_dict.append(sj_dict)          # для формирования json-файла
+                    unsorted_vacancy_list_sj.append(Vacancy(sj_dict))
+                    unsorted_vacancy_list_dict_sj.append(sj_dict)                       # для формирования json-файла
+        return unsorted_vacancy_list_sj, unsorted_vacancy_list_dict_sj      # возвращаем кортеж
 
     @staticmethod
     # connect

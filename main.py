@@ -11,7 +11,7 @@ search_str: str = os.getenv('search_str')  # поисковая фраза по 
 set_experience = '0'  # флаг "опыт работы"
 load_data_volume_default = 500  # общее количество запрашиваемых вакансий с платформы по API по умолчанию
 per_page_default = 50  # количество запрашиваемых вакансий на одной странице по умолчанию
-unsorted_vacancy_list = []
+# unsorted_vacancy_list = []
 unsorted_vacancy_list_dict = []
 # vacancy_write_file = []
 
@@ -33,6 +33,10 @@ def print_menu():
 
 
 def load_data():
+    """
+    Запрашивает параметры и выполняет загрузку данных с сайтов HH и SJ с сохранением
+    в HH_vacancies.json и в SJ_vacancies.json
+    """
     print(f'По умолчанию поиск вакансий выполняется по ключевой фразе "{search_str}"')
     input_string = input('Введите фразу для поиска (с разделителями ; , / :)или "Enter":')
     if len(input_string) > 2 and input_string.isalpha():
@@ -52,9 +56,9 @@ def load_data():
     print(load_data_volume)
     print(per_page)
 
-    # формирование экз. класса HH, затем - SJ
+    # Формирование экз. класса HH, затем - SJ
     hh = HH(new_search_str, set_experience, load_data_volume, per_page)
-    # вызов метода загрузки данных с сайта, параметры: поисковая строка/опыт/объем данных/количество на странице ответа
+    # Вызов метода загрузки данных с сайта, параметры: поисковая строка/опыт/объем данных/количество на странице ответа
     hh.request_and_write_data()
 
     sj = SJ(new_search_str, set_experience, load_data_volume, per_page)
@@ -62,6 +66,10 @@ def load_data():
 
 
 def show_town_list():
+    """
+    Корректирует названия городов (с заглавной буквы + составные названия)
+    и выводит вакансии по указанному городу (если имеются)
+    """
     print('Выбрана опция \'show_town_list\'')
     search_town = 'Москва'
     input_string = input('Введите название города (по умолчанию - Москва):')
@@ -73,12 +81,8 @@ def show_town_list():
                 item.title()
             search_town = '-'.join(search_town)
         search_town = search_town.title()
-
-    unsorted_vacancy_list.clear()
-    unsorted_vacancy_list_dict.clear()
-    # conn = Connector('tmp.json')
-    Connector.vacancy_selection_hh(unsorted_vacancy_list, unsorted_vacancy_list_dict)
-    Connector.vacancy_selection_sj(unsorted_vacancy_list, unsorted_vacancy_list_dict)
+    # сумма списков экземпляров класса Vacancy из двух источников
+    unsorted_vacancy_list = Connector.vacancy_selection_hh()[0] + Connector.vacancy_selection_sj()[0]
     print(f'Поиск по городу: {search_town}:')
     for item in unsorted_vacancy_list:
         if item.city == search_town:
@@ -86,6 +90,7 @@ def show_town_list():
 
 
 def show_top_10():
+    pass
     print('Выбрана опция \'show_top_10\'')
     if len(unsorted_vacancy_list) == 0:
         print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
@@ -96,15 +101,16 @@ def show_top_10():
     unsorted_vacancy_list.sort(key=lambda k: k.salary_from, reverse=True)
     sorted_by_salary_list = unsorted_vacancy_list
     for item in range(10):
-        print(sorted_by_salary_list[item])      # сортированный по зарплате
+        print(sorted_by_salary_list[item])  # сортированный по зарплате
 
 
 def write_current_json_file():
+    pass
     # conn = Connector('jhg')
-    Connector.vacancy_selection_hh(unsorted_vacancy_list, unsorted_vacancy_list_dict)
-    Connector.vacancy_selection_sj(unsorted_vacancy_list, unsorted_vacancy_list_dict)
-    jf = input('Введите имя файла: ')
-    Connector.wr_json_file(jf, unsorted_vacancy_list_dict)
+    # Connector.vacancy_selection_hh(unsorted_vacancy_list, unsorted_vacancy_list_dict)
+    # Connector.vacancy_selection_sj(unsorted_vacancy_list, unsorted_vacancy_list_dict)
+    # jf = input('Введите имя файла: ')
+    # Connector.wr_json_file(jf, unsorted_vacancy_list_dict)
 
 
 if __name__ == '__main__':
