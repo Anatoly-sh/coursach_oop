@@ -90,18 +90,15 @@ def show_town_list():
 
 
 def show_top_10():
-    pass
-    print('Выбрана опция \'show_top_10\'')
-    if len(unsorted_vacancy_list) == 0:
-        print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-        # conn = Connector('tmp.json')
-        Connector.vacancy_selection_hh(unsorted_vacancy_list, unsorted_vacancy_list_dict)
-        Connector.vacancy_selection_sj(unsorted_vacancy_list, unsorted_vacancy_list_dict)
-
+    """
+    Выводит 10 самых высокооплачиваемых вакансий
+    """
+    print('10 самых высокооплачиваемых вакансий:')
+    unsorted_vacancy_list = Connector.vacancy_selection_hh()[0] + Connector.vacancy_selection_sj()[0]
     unsorted_vacancy_list.sort(key=lambda k: k.salary_from, reverse=True)
-    sorted_by_salary_list = unsorted_vacancy_list
+    sorted_by_salary_list = unsorted_vacancy_list                       # сортированный по зарплате
     for item in range(10):
-        print(sorted_by_salary_list[item])  # сортированный по зарплате
+        print(f'{item + 1} -- {sorted_by_salary_list[item]}')
 
 
 def write_current_json_file():
