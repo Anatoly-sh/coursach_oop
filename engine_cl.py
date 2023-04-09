@@ -2,12 +2,13 @@ import json
 import os
 from abc import ABC, abstractmethod
 import requests
-
+from requests import Response
+from typing import Any, Dict
 from dotenv import load_dotenv
 
 load_dotenv()
 
-api_key: str = os.getenv('SUPERJOB_API_KEY')
+api_key = os.getenv('SUPERJOB_API_KEY')
 
 
 class Engine(ABC):
@@ -17,7 +18,7 @@ class Engine(ABC):
     """
 
     @abstractmethod
-    def get_request(self, url: str, params: dict):
+    def get_request(self, url: str, params: dict) -> Response | list | None:
         """
         Абстрактный метод, отправляющий запрос на тот или иной сайт вакансий.
         Url: url запроса
@@ -53,10 +54,10 @@ class HH(Engine):
         if experience == '1':
             self.params['experience'] = 'noExperience'      # добавляем в словарь параметров
 
-    def get_request(self, url: str, params: dict):
+    def get_request(self, url: str, params: dict) -> Response | list | None:
         return super().get_request(self.url, self.params)   # строка запроса из класса Engine
 
-    def request_and_write_data(self):
+    def request_and_write_data(self) -> None:
         """
         Запрашивает и загружает в файл данные в формате json
         """
@@ -66,7 +67,7 @@ class HH(Engine):
             data_list = {}
             # вычисляем количество загружаемых страниц (load_data_volume делим нацело на 'per_page'  +1)
             # 'per_page' может быть подобрано в зависимости от возможностей платформы (по умолчанию - 50)
-            for i in range(int(self.load_data_volume // self.params['per_page'] + 1)):
+            for i in range(int(self.load_data_volume // int(self.params['per_page']) + 1)):
                 self.params['page'] = i
                 print(str(i), end=' ')
                 data_of_page = self.get_request(self.url, self.params).json()
@@ -94,7 +95,7 @@ class SJ(Engine):
         if no_experience == '1':
             self.params['without_experience'] = 1
 
-    def get_request(self, url: str, headers: dict, params: dict):
+    def get_request(self, url: str, headers: dict, params: dict) -> Response | list | None:
         # отличается от базового метода
         try:
             response = requests.get(url=self.url, headers=self.header, params=self.params)
@@ -106,7 +107,7 @@ class SJ(Engine):
         except (requests.exceptions.RequestException, LookupError) as error:
             print(f'Не могу получить данные, {error}')
 
-    def request_and_write_data(self):
+    def request_and_write_data(self) -> None:
         """
         Запрашивает и загружает в файл данные в формате json
         """
@@ -114,7 +115,8 @@ class SJ(Engine):
         with open('./SJ_vacancies.json', 'w') as file:
             # словарь с данными
             data_list = {}
-            for i in range(int(self.load_data_volume // self.params['count'] + 1)):
+
+            for i in range(int(self.load_data_volume // int(self.params['count']) + 1)):
                 self.params['page'] = i
                 print(str(i), end=' ')
                 data_of_page = self.get_request(url=self.url, headers=self.header, params=self.params).json()
@@ -139,17 +141,17 @@ class Vacancy:
         self.description = data['description']
         self.responsibility = data['responsibility']
 
-    def __gt__(self, other):
+    def __gt__(self, other: Any) -> bool:
         return self.salary_from > other.salary_from
 
-    def __lt__(self, other):
+    def __lt__(self, other: Any) -> bool:
         return self.salary_from < other.salary_from
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'Источник: {self.source}, ' \
                f'вакансия: {self.name_vac}, ' \
                f'город: {self.city}, ' \
                f'зарплата от: {self.salary_from}'
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'Вакансия - {self.name_vac}, зарплата - {self.salary_from}'

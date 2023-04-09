@@ -11,7 +11,7 @@ class Connector:
         self.data_file = file_path
 
     @staticmethod
-    def vacancy_selection_hh():    # (unsorted_vacancy_list: list, unsorted_vacancy_list_dict: list):
+    def vacancy_selection_hh() -> tuple:    # (unsorted_vacancy_list: list, unsorted_vacancy_list_dict: list):
         unsorted_vacancy_list_hh = []
         unsorted_vacancy_list_dict_hh = []
         """
@@ -56,7 +56,7 @@ class Connector:
         return unsorted_vacancy_list_hh, unsorted_vacancy_list_dict_hh      # возвращаем кортеж
 
     @staticmethod
-    def vacancy_selection_sj():     # (unsorted_vacancy_list: list, unsorted_vacancy_list_dict: list):
+    def vacancy_selection_sj() -> tuple:     # (unsorted_vacancy_list: list, unsorted_vacancy_list_dict: list):
         unsorted_vacancy_list_sj = []
         unsorted_vacancy_list_dict_sj = []
         """
@@ -88,11 +88,11 @@ class Connector:
 
     @staticmethod
     # connect
-    def wr_json_file(file, vacancy_write_file):
+    def wr_json_file(file: str, vacancy_write_file: list) -> None:
         with open(file, 'w+') as json_file:
             json.dump(vacancy_write_file, json_file, indent=2, ensure_ascii=False)
 
-    def connect(self):
+    def connect(self) -> None:
         """
         Создание файла с пустым списком или его перезапись
         """
@@ -131,7 +131,7 @@ class Connector:
         функция удаления не сработает
         """
         if not query:
-            return
+            return None
         with open(self.data_file) as f:
             data = json.load(f)
 

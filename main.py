@@ -1,5 +1,3 @@
-import os
-
 from dotenv import load_dotenv
 from engine_cl import HH, SJ
 from connector import Connector
@@ -7,7 +5,7 @@ from connector import Connector
 from utils.functions import *
 
 load_dotenv()
-search_str: str = os.getenv('search_str')  # поисковая фраза по умолчанию
+search_str = 'Python'  # поисковая фраза по умолчанию
 set_experience = '0'  # флаг "опыт работы"
 load_data_volume_default = 500  # общее количество запрашиваемых вакансий с платформы по API по умолчанию
 per_page_default = 50  # количество запрашиваемых вакансий на одной странице по умолчанию
@@ -23,14 +21,14 @@ menu_options = {
 }
 
 
-def print_menu():
+def print_menu() -> None:
     print('\n                    Программа "Парсер вакансий"\n'
           'выполняет поиск вакансий посредством API на сайтах HeadHunter и SuperJob')
     for key in menu_options.keys():
         print(key, '--', menu_options[key])
 
 
-def load_data():
+def load_data() -> None:
     """
     Запрашивает параметры и выполняет загрузку данных с сайтов HH и SJ с сохранением
     в HH_vacancies.json и в SJ_vacancies.json
@@ -38,7 +36,7 @@ def load_data():
     print(f'По умолчанию поиск вакансий выполняется по ключевой фразе "{search_str}"')
     input_string = input('Введите фразу для поиска (с разделителями ; , / :)или "Enter":')
     if len(input_string) > 2 and input_string.isalpha():
-        new_search_str = re.split(";|,| |/|:", input_string)
+        new_search_str = str(re.split(";|,| |/|:", input_string))
     else:
         new_search_str = search_str
     inp = input('Введите требуемое количество вакансий с каждой платформы (сайта) - по умолчанию 500:')
@@ -63,7 +61,7 @@ def load_data():
     sj.request_and_write_data()
 
 
-def show_town_list():
+def show_town_list() -> None:
     """
     Корректирует названия городов (с заглавной буквы + составные названия)
     и выводит вакансии по указанному городу (если имеются)
@@ -72,12 +70,12 @@ def show_town_list():
     search_town = 'Москва'
     input_string = input('Введите название города (по умолчанию - Москва):')
     if len(input_string) > 2:
-        search_town = input_string.title()
-        if '-' in search_town:
-            search_town = search_town.split('-')
-            for item in search_town:
+        search = input_string.title()
+        if '-' in search:
+            search = search.split('-')
+            for item in search:
                 item.title()
-            search_town = '-'.join(search_town)
+            search_town = str('-'.join(search))
         search_town = search_town.title()
     # сумма списков экземпляров класса Vacancy из двух источников
     unsorted_vacancy_list = Connector.vacancy_selection_hh()[0] + Connector.vacancy_selection_sj()[0]
@@ -87,7 +85,7 @@ def show_town_list():
             print(f'{item.city}: ', item)
 
 
-def show_top_10():
+def show_top_10() -> None:
     """
     Выводит 10 самых высокооплачиваемых вакансий
     """
@@ -99,7 +97,7 @@ def show_top_10():
         print(f'{item + 1} -- {sorted_by_salary_list[item]}')
 
 
-def write_current_json_file():
+def write_current_json_file() -> None:
     """
     Запись в файл формата json вакансий из источников HH и SJ с отобранными параметрами
     """
@@ -114,26 +112,26 @@ if __name__ == '__main__':
         print_menu()
         option = ''
         try:
-            option = int(input('Сделайте выбор: '))
+            option = input('Сделайте выбор: ')
         except:
             print('Неверный ввод. Пожалуйста введите цифру...')
         # Проверка выбора и действие
-        if option == 1:
+        if option == '1':
             if set_experience == '0':
                 set_experience = '1'
                 print(f'Флаг "без опыта работы" установлен')
             else:
                 set_experience = '0'
                 print(f'Флаг "без опыта работы" сброшен')
-        elif option == 2:
+        elif option == '2':
             load_data()
-        elif option == 3:
+        elif option == '3':
             show_town_list()
-        elif option == 4:
+        elif option == '4':
             show_top_10()
-        elif option == 5:
+        elif option == '5':
             write_current_json_file()
-        elif option == 6:
+        elif option == '6':
             print('Спасибо за использование программы')
             exit()
         else:
