@@ -76,9 +76,9 @@ def show_town_list():
 
     unsorted_vacancy_list.clear()
     unsorted_vacancy_list_dict.clear()
-    conn = Connector('tmp.json')
-    conn.vacancy_selection_hh(unsorted_vacancy_list, unsorted_vacancy_list_dict)
-    conn.vacancy_selection_sj(unsorted_vacancy_list, unsorted_vacancy_list_dict)
+    # conn = Connector('tmp.json')
+    Connector.vacancy_selection_hh(unsorted_vacancy_list, unsorted_vacancy_list_dict)
+    Connector.vacancy_selection_sj(unsorted_vacancy_list, unsorted_vacancy_list_dict)
     print(f'Поиск по городу: {search_town}:')
     for item in unsorted_vacancy_list:
         if item.city == search_town:
@@ -89,9 +89,9 @@ def show_top_10():
     print('Выбрана опция \'show_top_10\'')
     if len(unsorted_vacancy_list) == 0:
         print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-        conn = Connector('tmp.json')
-        conn.vacancy_selection_hh(unsorted_vacancy_list, unsorted_vacancy_list_dict)
-        conn.vacancy_selection_sj(unsorted_vacancy_list, unsorted_vacancy_list_dict)
+        # conn = Connector('tmp.json')
+        Connector.vacancy_selection_hh(unsorted_vacancy_list, unsorted_vacancy_list_dict)
+        Connector.vacancy_selection_sj(unsorted_vacancy_list, unsorted_vacancy_list_dict)
 
     unsorted_vacancy_list.sort(key=lambda k: k.salary_from, reverse=True)
     sorted_by_salary_list = unsorted_vacancy_list
@@ -100,11 +100,11 @@ def show_top_10():
 
 
 def write_current_json_file():
-    conn = Connector('jhg')
-    conn.vacancy_selection_hh(unsorted_vacancy_list, unsorted_vacancy_list_dict)
-    conn.vacancy_selection_sj(unsorted_vacancy_list, unsorted_vacancy_list_dict)
+    # conn = Connector('jhg')
+    Connector.vacancy_selection_hh(unsorted_vacancy_list, unsorted_vacancy_list_dict)
+    Connector.vacancy_selection_sj(unsorted_vacancy_list, unsorted_vacancy_list_dict)
     jf = input('Введите имя файла: ')
-    conn.wr_json_file(jf, unsorted_vacancy_list_dict)
+    Connector.wr_json_file(jf, unsorted_vacancy_list_dict)
 
 
 if __name__ == '__main__':

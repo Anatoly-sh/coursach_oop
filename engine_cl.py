@@ -22,8 +22,8 @@ class Engine(ABC):
     def get_request(self, url: str, params: dict):
         """
         Абстрактный метод, отправляющий запрос на тот или иной сайт вакансий.
-        url: url запроса
-        params: параметры запроса
+        Url: url запроса
+        Params: параметры запроса
         """
         try:
             response = requests.get(url=url, params=params)
