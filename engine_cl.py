@@ -5,8 +5,6 @@ import requests
 
 from dotenv import load_dotenv
 
-# from main import load_data_volume, per_page
-# import main
 load_dotenv()
 
 api_key: str = os.getenv('SUPERJOB_API_KEY')

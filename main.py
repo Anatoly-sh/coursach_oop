@@ -11,9 +11,7 @@ search_str: str = os.getenv('search_str')  # поисковая фраза по 
 set_experience = '0'  # флаг "опыт работы"
 load_data_volume_default = 500  # общее количество запрашиваемых вакансий с платформы по API по умолчанию
 per_page_default = 50  # количество запрашиваемых вакансий на одной странице по умолчанию
-# unsorted_vacancy_list = []
-unsorted_vacancy_list_dict = []
-# vacancy_write_file = []
+
 
 menu_options = {
     1: 'Флаг "без опыта работы"',
@@ -102,12 +100,12 @@ def show_top_10():
 
 
 def write_current_json_file():
-    pass
-    # conn = Connector('jhg')
-    # Connector.vacancy_selection_hh(unsorted_vacancy_list, unsorted_vacancy_list_dict)
-    # Connector.vacancy_selection_sj(unsorted_vacancy_list, unsorted_vacancy_list_dict)
-    # jf = input('Введите имя файла: ')
-    # Connector.wr_json_file(jf, unsorted_vacancy_list_dict)
+    """
+    Запись в файл формата json вакансий из источников HH и SJ с отобранными параметрами
+    """
+    unsorted_vacancy_list_dict = Connector.vacancy_selection_hh()[1] + Connector.vacancy_selection_sj()[1]
+    jf = input('Введите имя файла: ')
+    Connector.wr_json_file(jf, unsorted_vacancy_list_dict)
 
 
 if __name__ == '__main__':

@@ -83,8 +83,8 @@ class Connector:
                                }
 
                     unsorted_vacancy_list_sj.append(Vacancy(sj_dict))
-                    unsorted_vacancy_list_dict_sj.append(sj_dict)                       # для формирования json-файла
-        return unsorted_vacancy_list_sj, unsorted_vacancy_list_dict_sj      # возвращаем кортеж
+                    unsorted_vacancy_list_dict_sj.append(sj_dict)               # для формирования json-файла
+        return unsorted_vacancy_list_sj, unsorted_vacancy_list_dict_sj          # возвращаем в кортеже
 
     @staticmethod
     # connect
